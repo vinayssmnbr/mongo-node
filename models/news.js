@@ -7,5 +7,5 @@ const newsSchema=new Schema({
     urlToImage: String,
     publishedAt: Date
 });
-const newsModel=mongoose.model('News',newsSchema)
+const newsModel=mongoose.model('everynews',newsSchema)
 module.exports=newsModel

@@ -1,14 +1,16 @@
 const newsModel=require('../models/news')
 const axios=require('axios')
 
-const apiKey = '9328edd97a4f4c4c9795cda0730607ca';
-const apiUrl = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKey}`;
+// const apiKey = '9328edd97a4f4c4c9795cda0730607ca';
+// const apiUrl = `https://newsapi.org/v2/everything?q=apple&from=2023-03-21&to=2023-03-21&sortBy=popularity${searchTerm}&apiKey=${apiKey}`;
 
 const api=async(req,res)=>{
+    const searchTerm = req.query.q;
+    const apiKey = '9328edd97a4f4c4c9795cda0730607ca';
+    const apiUrl = `https://newsapi.org/v2/everything?q=apple&from=2023-03-21&to=2023-03-21&sortBy=popularity${searchTerm}&apiKey=${apiKey}`;
     try{
         const response =await axios.get(apiUrl)
         const articles=response.data.articles;
-        // const newsList=[];
 
         for (let i = 0; i < articles.length; i++) {
             const article = articles[i];
@@ -20,7 +22,6 @@ const api=async(req,res)=>{
               publishedAt: article.publishedAt,
 
             });
-        //    newsList.push(await news.save())
         await news.save()
         }
     
@@ -35,8 +36,8 @@ const api=async(req,res)=>{
 
 
 const getData = (req,res)=>{
-// res.send([{name:"rohit"}])
-newsModel.find()
+    const searchTerm = req.query.q;
+newsModel.find({ title: { $regex: searchTerm ? searchTerm : "", $options: "i" } })
 .then(response=>{
     res.json({
         response
