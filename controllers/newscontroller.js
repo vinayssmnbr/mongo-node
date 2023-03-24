@@ -41,10 +41,8 @@ const getData = (req,res)=>{
     let {searchTerm,source}= req.query;
     // let source=req.query.q
 
-console.log(source)
-
 source =source?.split(",")
-console.log(source)
+
 newsModel.find({ title: { $regex: searchTerm ? searchTerm : "", $options: "i" },source:source?source:{ $regex:''}})
 .then(response=>{
     res.json({
