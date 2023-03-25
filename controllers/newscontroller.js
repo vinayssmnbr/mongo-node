@@ -37,25 +37,53 @@ const api=async(req,res)=>{
 }
 
 
-const getData = (req,res)=>{
-    let {searchTerm,source}= req.query;
-    // let source=req.query.q
 
+
+const getData = async(req,res)=>{
+    let {searchTerm,source}= req.query;
 source =source?.split(",")
 
-newsModel.find({ title: { $regex: searchTerm ? searchTerm : "", $options: "i" },source:source?source:{ $regex:''}})
-.then(response=>{
+let query = {source:source?source:{ $regex:''}}
+try{
+    if(searchTerm?.length){ 
+        query["$text"]={$search:searchTerm}
+    }
+    let data = await newsModel.find(query)
+
+
     res.json({
-        response
+        response:data
     })
-})
-.catch(error=>{
-    console.log(error)
+
+
+}
+catch(err){
     res.json({
         message:"error"
     })
-})
 }
+}
+
+
+
+// const getData = (req,res)=>{
+//     let {searchTerm,source}= req.query;
+
+// source =source?.split(",")
+
+// newsModel.find({   { $regex: searchTerm ? searchTerm : "", $options: "i" },source:source?source:{ $regex:''}})
+// .then(response=>{
+//     res.json({
+//         response
+//     })
+// })
+// .catch(error=>{
+//     console.log(error)
+//     res.json({
+//         message:"error"
+//     })
+// })
+// }
 
 module.exports={api, getData}
 
