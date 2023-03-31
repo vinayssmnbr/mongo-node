@@ -41,26 +41,12 @@ app.get("/", (req, res) => {
   res.json({ message: "You are not logged in" });
 });
 
-app.get("/failed", (req, res) => {
-  res.send("Failed");
-});
-app.get("/success", (req, res) => {
-  res.send(`Welcome ${req}`);
-});
+// app.get("/failed", (req, res) => {
+//   res.send("Failed");
+// });
+
+// app.get("/success", (req, res) => {
+//   res.send(`Welcome,${req}`);
+// });
 
 app.use("/auth", authRoutes);
-
-
-// const isLoggedIn = (req, res, next) => {
-//   if (req.user) {
-//     next();
-//   } else {
-//     res.sendStatus(401);
-//   }
-// };
-
-// app.get("/logout", (req, res) => {
-//   req.session = null;
-//   req.logout();
-//   res.redirect("/");
-// });

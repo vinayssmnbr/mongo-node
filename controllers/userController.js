@@ -83,4 +83,13 @@ const auth=function(req,res){
 }
 
 
-module.exports = { register, login,auth };
+
+const profile=function(req,res){
+  res.send('profile', { username: req.user.username });
+
+
+}
+
+
+
+module.exports = { register, login,auth,profile };

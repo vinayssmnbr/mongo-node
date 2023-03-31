@@ -1,0 +1,172 @@
+router.get("/auth/google/callback", passport.authenticate("google"), async(req, res) => {
+
+    try {
+        if(userProfile){
+            console.log("userProfile.id",userProfile.id)
+            // check login 
+            const user = await UserModel.findOne({googleId:userProfile.id})
+    router.get("/auth/google/callback", passport.authenticate("google"), async(req, res) => {
+
+    try {
+        if(userProfile){
+            console.log("userProfile.id",userProfile.id)
+            // check login 
+            const user = await UserModel.findOne({googleId:userProfile.id})
+    
+            if(user){
+                 // Generate an access token
+            const accessToken = jwt.sign(
+                { userId:user.id, email: user.email,name :user.name},
+                accessTokenSecret
+              );
+      
+              res.redirect(`http://localhost:3000/googleLogin/${accessToken}`);
+              return
+    
+            }
+            else {
+                // create user 
+                userRegisterData = {
+                    name: userProfile.displayName || "",
+                    email: userProfile.emails[0].value,
+                    googleId :userProfile.id
+                  };
+              
+                  const userRegister = await insertUser(userRegisterData);
+              
+                  var token = jwt.sign({ userId: userRegister.id, email: userRegister.email }, accessTokenSecret, {
+                    expiresIn: 86400 // 24 hours
+                  });
+                  res.redirect(`http://localhost:3000/googleLogin/${token}`);
+                  return
+            }
+    
+    
+        }
+       
+    } catch (error) {
+        console.log("error",error)
+        
+    }
+
+    
+    
+});
+            if(user){
+                 // Generate an access token
+            const accessToken = jwt.sign(
+                { userId:user.id, email: user.email,name :user.name},
+                accessTokenSecret
+              );
+      
+              res.redirect(`http://localhost:3000/googleLogin/${accessToken}`);
+              return
+    
+            }
+            else {
+                // create user 
+                userRegisterData = {
+                    name: userProfile.displayName || "",
+                    email: userProfile.emails[0].value,
+                    googleId :userProfile.id
+                  };
+              
+                  const userRegister = await insertUser(userRegisterData);
+              
+                  var token = jwt.sign({ userId: userRegister.id, email: userRegister.email }, accessTokenSecret, {
+                    expiresIn: 86400 // 24 hours
+                  });
+                  res.redirect(`http://localhost:3000/googleLogin/${token}`);
+                  return
+            }
+    
+    
+        }
+       
+    } catch (error) {
+        console.log("error",error)
+        
+    }
+
+    
+    
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const { Router } = require("express");
+const passport = require("passport");
+const UserModel = require("../models/User");
+
+const authRoutes = new Router();
+
+authRoutes.get(
+  "/google",
+  passport.authenticate("google", {
+    scope: ["email", "profile"],
+  })
+);
+
+authRoutes.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/failed",
+  }),
+
+  async (req, res) => {
+    // const code = req.query.code;
+    // try {
+    //   const { tokens } = await passport.getToken(code);
+    //   res.json(tokens);
+    //   res.redirect("/success");
+    // } catch (error) {
+    //   console.log(error);
+    //   res.sendStatus(500);
+    // }
+
+
+    
+    // console.log("userprofile", userProfile);
+    // let email = userProfile.emails[0].value;
+
+    // if (userProfile) {
+    //   let user = await UserModel.findOne({
+    //     email: email,
+    //   });
+
+    //   if (user) {
+    //   } else {
+    //     const user = new UserModel({
+    //       email,
+    //     });
+    //     return user.save();
+    //   }
+    // } else {
+    //   res.redirect("/login");
+    // }
+    res.redirect("/success");
+  }
+);
+
+// authRoutes.get("/logout", (req, res) => {
+//     req.session = null;
+//     req.logout();
+//     res.redirect('/');
+//     })
+
+module.exports = authRoutes;

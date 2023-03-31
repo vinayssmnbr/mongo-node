@@ -1,3 +1,4 @@
+
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
 
@@ -18,6 +19,7 @@ passport.use(
       passReqToCallback: true,
     },
     function (request, accessToken, refreshToken, profile, done) {
+      userProfile=profile
       console.log(profile);
       return done(null, profile);
     }
